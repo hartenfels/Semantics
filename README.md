@@ -8,6 +8,8 @@ Semantics — embedded semantic queries and types
 ```perl6
 use Semantics <share/music.rdf>;
 
+subtype MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
+subtype Influenceable of MusicArtist where * ⊑ ∃
 for query <:MusicArtist> -> $artist {
     my @influences = $artist → <:influencedBy>;
     say "$artist was influenced by ", @influences.join(', ') || 'no one';

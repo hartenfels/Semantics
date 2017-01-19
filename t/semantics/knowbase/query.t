@@ -3,12 +3,19 @@ use Test;
 use Semantics <share/music.rdf>;
 
 
-cmp-ok set(query <:MusicArtist>), 'eqv', set(I<:beatles>, I<:hendrix>),
-       'query for artists returns a set of them';
+subtest {
+    my @artists = query <:MusicArtist>;
+    cmp-ok @artists,      '==',  2,           'two artists returned';
+    cmp-ok any(@artists), 'eqv', I<:beatles>, 'one of them is beatles';
+    cmp-ok any(@artists), 'eqv', I<:hendrix>, 'the other is hendrix';
+}, 'query for artists';
 
 
-cmp-ok set(query <:MusicArtist> ⊓ <:RecordedSong>), 'eqv', set(I<:hendrix>),
-       'query for artists that recorded a song';
+subtest {
+    my @recorded = query(<:MusicArtist> ⊓ <:RecordedSong>);
+    cmp-ok @recorded,    '==',  1,           'one artist returned';
+    cmp-ok @recorded[0], 'eqv', I<:hendrix>, 'the artist is hendrix';
+}, 'query for artists that recorded a song';
 
 
 throws-like { query F }, X::Semantics::Unsatisfiable,

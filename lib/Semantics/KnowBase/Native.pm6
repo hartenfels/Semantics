@@ -89,6 +89,9 @@ sub new-knowbase(Str() $path) is export {
 sub b_o(Str, Str, Obj, Obj --> int32)
     is export is native('semantics') { ... }
 
+sub b_oo(Str, Str, Obj, Obj, Obj --> int32)
+    is export is native('semantics') { ... }
+
 sub o(Str, Str, Obj --> Obj)
     is export is native('semantics') { ... }
 

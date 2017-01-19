@@ -185,6 +185,11 @@ int b_o(D_ARGS, jobject obj, jobject arg1)
     return BOOLIFY(call_b(obj, name, sig, arg1));
 }
 
+int b_oo(D_ARGS, jobject obj, jobject arg1, jobject arg2)
+{
+    return BOOLIFY(call_b(obj, name, sig, arg1, arg2));
+}
+
 
 D_CALL(jobject, call_o, CallObjectMethodV)
 

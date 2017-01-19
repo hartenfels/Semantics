@@ -97,6 +97,10 @@ class KnowBase {
         return satisfiable(intersect(cs));
     }
 
+    public boolean same(OWLNamedIndividual i, OWLNamedIndividual j) {
+        return hermit.isSameIndividual(i, j);
+    }
+
 
     private OWLNamedIndividual[] individuals(NodeSet<OWLNamedIndividual> set) {
         return set.getFlattened().toArray(new OWLNamedIndividual[0]);
@@ -112,13 +116,15 @@ class KnowBase {
     }
 
 
-    public boolean member(OWLNamedIndividual i, OWLClassExpression c) {
+    public boolean subtype(OWLClassExpression c, OWLClassExpression d) {
+        OWLClassExpression e = df.getOWLObjectComplementOf(d);
+        return  hermit.isEntailed(df.getOWLSubClassOfAxiom(c, d))
+            && !hermit.isEntailed(df.getOWLSubClassOfAxiom(c, e));
+    }
+
+    public boolean member(OWLClassExpression c, OWLNamedIndividual i) {
         OWLClassExpression d = df.getOWLObjectComplementOf(c);
         return  hermit.isEntailed(df.getOWLClassAssertionAxiom(c, i))
             && !hermit.isEntailed(df.getOWLClassAssertionAxiom(d, i));
-    }
-
-    public boolean same(OWLNamedIndividual i, OWLNamedIndividual j) {
-        return hermit.isSameIndividual(i, j);
     }
 }

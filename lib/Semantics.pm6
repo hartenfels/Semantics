@@ -5,6 +5,10 @@ use Semantics::Nominals;
 sub EXPORT(Str() $kb-path) {
     my Semantics::KnowBase $kb .= new($kb-path);
 
+    sub atom   ($a) { $kb.atom:    $a }
+    sub concept($c) { $kb.concept: $c }
+    sub nominal($i) { $kb.nominal: $i }
+
     sub project($i, $a) is looser(&infix:<+>) is assoc<none> {
         return $kb.project: $kb.nominal($i), $kb.atom($a);
     }
@@ -29,6 +33,14 @@ sub EXPORT(Str() $kb-path) {
         return $kb.forall: $kb.atom($a), $kb.concept($c);
     }
 
+    sub is-part-of($i, $c) is looser(&infix:«=>») {
+        return $kb.check-type: $kb.concept($c), $kb.nominal($i);
+    }
+
+    sub is-superset($c, $i) is looser(&infix:«=>») {
+        return $kb.check-type: $kb.nominal($i), $kb.concept($c);
+    }
+
     sub query($c) {
         return $kb.query: $kb.concept($c);
     }
@@ -41,6 +53,9 @@ sub EXPORT(Str() $kb-path) {
         'I'            => Semantics::Nominals.new(:$kb),
         'T'            => $kb.everything,
         'F'            => $kb.nothing,
+        '&concept'     => &concept,
+        '&atom'        => &atom,
+        '&nominal'     => &nominal,
         '&query'       => &query,
         '&infix:<→>'   => &project,
         '&infix:<⊔>'   => &unify,
@@ -49,5 +64,11 @@ sub EXPORT(Str() $kb-path) {
         '&prefix:<∃>'  => &exists,
         '&prefix:<∀>'  => &forall,
         '&postfix:<⁻>' => &invert,
+        '&infix:<eqv>' => &infix:<eqv>,
+        '&infix:<⊑>'   => &is-part-of,
+        '&infix:<⊒>'   => &is-superset,
+        'Atom'         => Semantics::KnowBase::Atom,
+        'Concept'      => Semantics::KnowBase::Concept,
+        'Individual'   => Semantics::KnowBase::Individual,
     };
 }

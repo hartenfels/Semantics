@@ -16,11 +16,25 @@ role Knowledgeable is Rooted {
     method new($kb, $obj) { self.bless(:$kb, :$obj) }
 }
 
-class Atom    does Knowledgeable {}
-class Concept does Knowledgeable {}
 
 class Individual does Knowledgeable {
-    method new($kb, $obj) { (state %cache){$obj} //= self.bless(:$kb, :$obj) }
+    method eqv(Individual:D $other --> Bool:D) {
+        return $!kb === $other.kb && $!kb.same(self, $other);
+    }
+
+    method strip(--> Individual:D) { Individual.new: $.kb, $.obj }
+}
+
+multi infix:<eqv>(Individual:D $i, Individual:D $j) is export { $i.eqv($j) }
+
+
+class Atom does Knowledgeable {}
+
+
+class Concept does Knowledgeable {
+    multi method ACCEPTS(Concept:D    $c) { $!kb.subtype: self, $c }
+    multi method ACCEPTS(Individual:D $i) { $!kb.member:  self, $i }
+    multi method ACCEPTS(             $ ) { False }
 }
 
 
@@ -92,8 +106,8 @@ method forall(Atom:D $a, Concept:D $c --> Concept:D) {
 }
 
 
-method !individuals(Obj:D $arr --> Array[Individual:D]) {
-    my Individual:D @is;
+method !individuals(Obj:D $arr --> Array) {
+    my @is;
     get-array $arr, -> Obj $obj { push @is, Individual.new: self, $obj };
     return @is;
 }
@@ -102,13 +116,34 @@ method satisfiable(Concept:D $c --> Bool:D) {
     return so jcall &b_o, 'satisfiable', "($C)Z", self, $c;
 }
 
-method query(Concept:D $c --> Array[Individual:D]) {
+method query(Concept:D $c) {
     fail X::Semantics::Unsatisfiable.new($c) unless self.satisfiable($c);
     my $obj = jcall &o_o, 'query', "($C)[$I", self, $c;
+    return map { $_ but $c }, self!individuals: $obj;
+}
+
+method project(Individual:D $i, Atom:D $a) {
+    my $obj = jcall &o_oo, 'project', "($I$A)[$I", self, $i, $a;
     return self!individuals: $obj;
 }
 
-method project(Individual:D $i, Atom:D $a --> Array[Individual:D]) {
-    my $obj = jcall &o_oo, 'project', "($I$A)[$I", self, $i, $a;
-    return self!individuals: $obj;
+
+method subtype(Concept:D $c, Concept:D $d --> Bool:D) {
+    return so jcall &b_oo, 'subtype', "($C$C)Z", self, $c, $d;
+}
+
+method member(Concept:D $c, Individual:D $i --> Bool:D) {
+    return so jcall &b_oo, 'member', "($C$I)Z", self, $c, $i;
+}
+
+method same(Individual:D $i, Individual:D $j --> Bool:D) {
+    return so jcall &b_oo, 'same', "($I$I)Z", self, $i, $j;
+}
+
+
+method check-type(Concept:D $c, Individual:D $i --> Bool:D) {
+    if $i.can(Concept.^name) {
+        return self.subtype: $c, $i."{Concept.^name}"();
+    }
+    return self.member:  $c, $i;
 }
