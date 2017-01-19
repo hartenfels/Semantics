@@ -65,8 +65,8 @@ multi method nominal(Str()        $s --> Individual:D) {
 
 
 method invert(Atom:D $a --> Atom:D) {
-    my $obj = jcall &o_o, 'invert', self, $a;
-    return Atom.new: self, $a;
+    my $obj = jcall &o_o, 'invert', "($A)$A", self, $a;
+    return Atom.new: self, $obj;
 }
 
 
