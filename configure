@@ -237,7 +237,7 @@ P6LIB = %P6LIB%
 TESTS = %TESTS%
 
 
-all: Makefile $(BLIB) $(P6LIB) $(TESTS)
+all: Makefile semantics $(BLIB) $(P6LIB) $(TESTS)
     make -s test
 
 
@@ -256,8 +256,13 @@ test:
     export LD_LIBRARY_PATH="blib:%LIBPATH%:$$LD_LIBRARY_PATH" PERL6LIB=lib; %PERL6% -c lib/Semantics.pm6 && prove -j 9 -e %PERL6% -r t
 
 
+semantics: share/bin-template.p6
+    perl -pe 's{__PERL6__}{%PERL6%}g; s{__LIBPATH__}{%LIBPATH%}g' <$< >$@
+    chmod +x $@
+
+
 clean:
-    rm -rf blib lib/.precomp
+    rm -rf blib lib/.precomp semantics
 
 realclean: clean
     rm -rf Makefile

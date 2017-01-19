@@ -1,4 +1,5 @@
 blib
 lib/.precomp
 Makefile
+semantics
 vendor
