@@ -7,10 +7,10 @@ subset Winery of Individual where * ⊏ <:Winery>;
 sub get-wines(Winery $producer) { $producer → <:hasMaker>⁻ }
 
 sub recommend-for(Wine $wine) {
-    given $wine.strip {
-        when * ⊏ <:RedWine>   { '🍗' }
-        when * ⊏ <:WhiteWine> { '🐟' }
-        when * ⊏ <:RoseWine>  { '❓' }
+    given $wine {
+        when * ⊑ <:RedWine>   { '🍗' }
+        when * ⊑ <:WhiteWine> { '🐟' }
+        when * ⊑ <:RoseWine>  { '❓' }
         default { 'stay away!' }
     }
 }
