@@ -8,15 +8,25 @@ Semantics — embedded semantic queries and types
 ```perl6
 use Semantics <share/music.rdf>;
 
-subtype MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
-subtype Influenceable of MusicArtist where * ⊑ ∃
+subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
+subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
+
+sub get-influences(MusicArtist $artist) {
+    given $artist.strip {
+        when Influenceable {
+            my @influences = $_ → <:influencedBy>;
+            return join ', ', @influences;
+        }
+        default {
+            return 'nobody';
+        }
+    }
+}
+
 for query <:MusicArtist> -> $artist {
-    my @influences = $artist → <:influencedBy>;
-    say "$artist was influenced by ", @influences.join(', ') || 'no one';
+    say "$artist was influenced by ", get-influences($artist);
 }
 ```
-
-**TODO:** type constraints.
 
 
 # REQUIREMENTS
