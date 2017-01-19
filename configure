@@ -257,7 +257,7 @@ test:
 
 
 clean:
-    rm -rf blib lib/.precomp .passed
+    rm -rf blib lib/.precomp
 
 realclean: clean
     rm -rf Makefile
