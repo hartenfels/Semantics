@@ -32,9 +32,8 @@ class Atom does Knowledgeable {}
 
 
 class Concept does Knowledgeable {
-    multi method ACCEPTS(Concept:D    $c) { $!kb.subtype: self, $c }
-    multi method ACCEPTS(Individual:D $i) { $!kb.member:  self, $i }
-    multi method ACCEPTS(|)               { callsame }
+    multi method ACCEPTS(Concept:D $c) { $!kb.subtype: self, $c }
+    multi method ACCEPTS(|)            { callsame }
 }
 
 
