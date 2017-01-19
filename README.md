@@ -56,7 +56,7 @@ It is necessary to set up your environment's `LD_LIBRARY_PATH` and to include
 Simply run your Perl 6 scripts that `use Semantics` via:
 
 ```sh
-./semantics yourprogram.p6`
+./semantics yourprogram.p6
 ```
 
 
