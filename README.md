@@ -46,7 +46,18 @@ gives to help it.
 
 Then run `make` to build the Java and C libraries and run the tests.
 
-**TODO:** enable installation so that `LD_LIBRARY_PATH` can be avoided.
+
+# RUNNING
+
+It is necessary to set up your environment's `LD_LIBRARY_PATH` and to include
+[lib](lib) in Perl 6's library path. Since that's annoying to do manually,
+`make` will generate a script called `semantics` that does this for you.
+
+Simply run your Perl 6 scripts that `use Semantics` via:
+
+```sh
+./semantics yourprogram.p6`
+```
 
 
 # LICENSE
