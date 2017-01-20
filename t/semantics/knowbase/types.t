@@ -25,4 +25,11 @@ dies-ok  { get-influences  <:beatles> }, 'dies with beatles string';
 dies-ok  { get-influences I<:beatles> }, 'dies with beatles individual';
 
 
+ok query(∃<:influencedBy> => T).all ⊑ ∃<:influencedBy> => T,
+   'correct query result for all elements';
+
+nok query(<:MusicArtist>).all ⊑ ∃<:influencedBy> => T,
+    'incorrect query result for all elements';
+
+
 done-testing;
