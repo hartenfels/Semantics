@@ -18,6 +18,19 @@ role Knowledgeable is Rooted {
 
 
 class Individual does Knowledgeable {
+    method id(--> Str:D) {
+        return jcall(&o_o, 'id', "($I)$S", $!kb, self).as-str;
+    }
+
+    method name(--> Str:D) {
+        given self.id {
+            return ~$0 when /^':'        (.*)    $/;
+            return ~$0 when /^'<' .* '#' (.*) '>'$/;
+            return ~$0 when /^'<'        (.*) '>'$/;
+            return $_;
+        }
+    }
+
     method eqv(Individual:D $other --> Bool:D) {
         return $!kb === $other.kb && $!kb.same(self, $other);
     }

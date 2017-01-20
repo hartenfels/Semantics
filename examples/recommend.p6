@@ -15,11 +15,9 @@ sub recommend-for(Wine $wine) {
     }
 }
 
-sub id(Individual $i) { "$i" ~~ /\#(.+)\>$/; ~$0 }
-
 
 for sort ~*, query <:Winery> -> $winery {
     my @wines = get-wines($winery);
     my $food  = @wines ?? recommend-for @wines[0] !! 'not a winery at all';
-    printf "%25s: %s\n", id($winery), $food;
+    printf "%25s: %s\n", $winery.name, $food;
 }

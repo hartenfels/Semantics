@@ -42,6 +42,10 @@ class KnowBase {
         return df.getOWLNamedIndividual(toIRI(s));
     }
 
+    public String id(OWLNamedIndividual i) {
+        return hermit.getPrefixes().abbreviateIRI(i.toStringID());
+    }
+
 
     public OWLObjectPropertyExpression atom(String s) {
         return df.getOWLObjectProperty(toIRI(s));
