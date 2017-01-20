@@ -3,7 +3,7 @@ use Test;
 use Semantics <share/music.rdf>;
 
 
-subset MusicArtist   of Individual  where * ⊏ <:MusicArtist>;
+subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
 subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
 
 

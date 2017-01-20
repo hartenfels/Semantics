@@ -14,24 +14,15 @@ is-deeply set(map * ⊑ ∃<:influencedBy> => T, query <:MusicArtist>),
           set(True, False), 'only some music artists have influences';
 
 
-is-deeply set(map * ⊏ ∃<:influencedBy> => T, query <:MusicArtist>),
-          set(False, False), 'query result subtype is more restricted';
-
-
-is-deeply set(map { $_.strip ⊏ ∃<:influencedBy> => T }, query <:MusicArtist>),
-          set(True, False), 'stripping the results works again';
-
-
-sub get-influences($x where { $_ ⊏ ∃<:influencedBy> => T }) {
+sub get-influences($x where { $_ ⊑ ∃<:influencedBy> => T }) {
     return $x → <:influencedBy>;
 }
 
-lives-ok { get-influences  <:hendrix> }, 'getting influences for string';
-lives-ok { get-influences I<:hendrix> }, 'getting influences for individual';
+lives-ok { get-influences  <:hendrix> }, 'lives with hendrix string';
+lives-ok { get-influences I<:hendrix> }, 'lives with hendrix individual';
 
-for query(<:MusicArtist>) -> $artist {
-    dies-ok { get-influences $artist }, "getting influences for query dies";
-}
+dies-ok  { get-influences  <:beatles> }, 'dies with beatles string';
+dies-ok  { get-influences I<:beatles> }, 'dies with beatles individual';
 
 
 done-testing;

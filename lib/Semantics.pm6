@@ -33,19 +33,11 @@ sub EXPORT(Str() $kb-path) {
         return $kb.forall: $kb.atom($a), $kb.concept($c);
     }
 
-    sub strictly-member($i, $c) is looser(&infix:«=>») {
-        return $kb.check-type: $kb.concept($c), $kb.nominal($i);
-    }
-
-    sub strictly-superset($c, $i) is looser(&infix:«=>») {
-        return $kb.check-type: $kb.nominal($i), $kb.concept($c);
-    }
-
-    sub loosely-member($i, $c) is looser(&infix:«=>») {
+    sub member($i, $c) is looser(&infix:«=>») {
         return $kb.member: $kb.concept($c), $kb.nominal($i);
     }
 
-    sub loosely-superset($c, $i) is looser(&infix:«=>») {
+    sub superset($c, $i) is looser(&infix:«=>») {
         return $kb.member: $kb.nominal($i), $kb.concept($c);
     }
 
@@ -73,10 +65,8 @@ sub EXPORT(Str() $kb-path) {
         '&prefix:<∀>'  => &forall,
         '&postfix:<⁻>' => &invert,
         '&infix:<eqv>' => &infix:<eqv>,
-        '&infix:<⊏>'   => &strictly-member,
-        '&infix:<⊐>'   => &strictly-superset,
-        '&infix:<⊑>'   => &loosely-member,
-        '&infix:<⊒>'   => &loosely-superset,
+        '&infix:<⊑>'   => &member,
+        '&infix:<⊒>'   => &superset,
         'Atom'         => Semantics::KnowBase::Atom,
         'Concept'      => Semantics::KnowBase::Concept,
         'Individual'   => Semantics::KnowBase::Individual,

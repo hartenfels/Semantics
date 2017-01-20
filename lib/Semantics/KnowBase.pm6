@@ -21,8 +21,6 @@ class Individual does Knowledgeable {
     method eqv(Individual:D $other --> Bool:D) {
         return $!kb === $other.kb && $!kb.same(self, $other);
     }
-
-    method strip(--> Individual:D) { Individual.new: $.kb, $.obj }
 }
 
 multi infix:<eqv>(Individual:D $i, Individual:D $j) is export { $i.eqv($j) }
@@ -118,7 +116,7 @@ method satisfiable(Concept:D $c --> Bool:D) {
 method query(Concept:D $c) {
     fail X::Semantics::Unsatisfiable.new($c) unless self.satisfiable($c);
     my $obj = jcall &o_o, 'query', "($C)[$I", self, $c;
-    return map { $_ but $c }, self!individuals: $obj;
+    return self!individuals: $obj;
 }
 
 method project(Individual:D $i, Atom:D $a) {
@@ -137,12 +135,4 @@ method member(Concept:D $c, Individual:D $i --> Bool:D) {
 
 method same(Individual:D $i, Individual:D $j --> Bool:D) {
     return so jcall &b_oo, 'same', "($I$I)Z", self, $i, $j;
-}
-
-
-method check-type(Concept:D $c, Individual:D $i --> Bool:D) {
-    if $i.can(Concept.^name) {
-        return self.subtype: $c, $i."{Concept.^name}"();
-    }
-    return self.member:  $c, $i;
 }

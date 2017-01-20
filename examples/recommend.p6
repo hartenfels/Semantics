@@ -1,7 +1,7 @@
 use Semantics <share/wine.rdf>;
 
-subset Wine   of Individual where * ⊏ <:Wine>;
-subset Winery of Individual where * ⊏ <:Winery>;
+subset Wine   of Individual where * ⊑ <:Wine>;
+subset Winery of Individual where * ⊑ <:Winery>;
 
 
 sub get-wines(Winery $producer) { $producer → <:hasMaker>⁻ }

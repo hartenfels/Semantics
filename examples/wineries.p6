@@ -10,4 +10,4 @@ sub to-maker(@source where { .all ~~ Wine }) {
 }
 
 
-.say for sort to-maker map *.strip, query <:RedWine> ⊓ <:DryWine>;
+.say for sort to-maker query <:RedWine> ⊓ <:DryWine>;
