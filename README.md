@@ -215,7 +215,8 @@ sub foo(@artists where { .all ~~ MusicArtist }) { ... }
 sub infix:<→>(Individual:D|Str:D, Concept:D|Str:D --> Seq:D)
 ```
 
-Queries against an individual and returns a sequence of individuals.
+Queries against an individual and returns a sequence of individuals. For
+example, `<:hendrix> → <:influencedBy>`.
 
 As with [queries](#Query), only the individuals have a type, the sequence
 itself does not.
