@@ -6,6 +6,5 @@ my @libs  = split ':', '__LIBPATH__';
 my $p6lib = $dir.child('lib').absolute;
 
 %*ENV<LD_LIBRARY_PATH> = join ':', $blib, |@libs, %*ENV<LD_LIBRARY_PATH> || ();
-%*ENV<PERL6LIB>        = join ':', $p6lib,        %*ENV<PERL6LIB>        || ();
 
-exit run($*EXECUTABLE, |@*ARGS).exitcode;
+exit run($*EXECUTABLE, "-I$p6lib", |@*ARGS).exitcode;
