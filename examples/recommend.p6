@@ -4,7 +4,7 @@ subset Wine   of Individual where * ⊑ <:Wine>;
 subset Winery of Individual where * ⊑ <:Winery>;
 
 
-sub get-wines(Winery $producer) { $producer → <:hasMaker>⁻ }
+sub get-wines(Winery $producer) { sort ~*, $producer → <:hasMaker>⁻ }
 
 sub recommend-for(Wine $wine) {
     given $wine {
