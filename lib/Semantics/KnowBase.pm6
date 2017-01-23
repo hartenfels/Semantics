@@ -18,11 +18,11 @@ role Knowledgeable is Rooted {
 
 
 class Individual does Knowledgeable {
-    method id(--> Str:D) {
+    method id(Individual:D: --> Str:D) {
         return jcall(&o_o, 'id', "($I)$S", $!kb, self).as-str;
     }
 
-    method name(--> Str:D) {
+    method name(Individual:D: --> Str:D) {
         given self.id {
             return ~$0 when /^':'        (.*)    $/;
             return ~$0 when /^'<' .* '#' (.*) '>'$/;
@@ -31,7 +31,7 @@ class Individual does Knowledgeable {
         }
     }
 
-    method eqv(Individual:D $other --> Bool:D) {
+    method eqv(Individual:D: Individual:D $other --> Bool:D) {
         return $!kb === $other.kb && $!kb.same(self, $other);
     }
 }
@@ -43,8 +43,8 @@ class Atom does Knowledgeable {}
 
 
 class Concept does Knowledgeable {
-    multi method ACCEPTS(Concept:D $c) { $!kb.subtype: self, $c }
-    multi method ACCEPTS(|)            { callsame }
+    multi method ACCEPTS(Concept:D: Concept:D $c) { $!kb.subtype: self, $c }
+    multi method ACCEPTS(|)                       { callsame               }
 }
 
 

@@ -41,8 +41,10 @@ role Rooted is export {
 
     submethod DESTROY { unroot($!obj) }
 
-    method Str () { ~$!obj }
-    method gist() { ~$!obj }
+    method Str(Rooted:D:) { ~$!obj }
+
+    multi method gist(Rooted:D:) { ~$!obj   }
+    multi method gist(Rooted:U:) { nextsame }
 }
 
 
