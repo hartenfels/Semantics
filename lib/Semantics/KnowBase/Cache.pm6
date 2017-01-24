@@ -1,5 +1,5 @@
 unit class Semantics::KnowBase::Cache;
-use JSON::Fast;
+use Semantics::JSON::Any;
 use Semantics::KnowBase::Native;
 
 
