@@ -1,3 +1,4 @@
+use Semantics::KnowBase::Cache;
 use Semantics::KnowBase::Native;
 use X::Semantics;
 unit class Semantics::KnowBase is Rooted;
@@ -21,12 +22,18 @@ class Knowledgeable is Rooted {
     multi method new($kb, $key, $obj) {
         return self.bless(:$kb, :$key, :$obj);
     }
+
+    method Str(Knowledgeable:D: --> Str:D) {
+        $.kb.cache.get: { ~self.obj }, 'Str', $.key;
+    }
 }
 
 
+sub id($kb, $obj) { jcall(&o_o, 'id', "($I)$S", $kb, $obj).as-str }
+
 class Individual is Knowledgeable {
     method id(Individual:D: --> Str:D) {
-        return jcall(&o_o, 'id', "($I)$S", $.kb, self).as-str;
+        return $.kb.cache.get: { id($.kb, self) }, 'id', $.key;
     }
 
     method name(Individual:D: --> Str:D) {
@@ -55,10 +62,20 @@ class Concept is Knowledgeable {
 }
 
 
+has $.cache;
+
+submethod BUILD(:$kb-file, :$cache-file) {
+    $!cache = Semantics::KnowBase::Cache.new(:$kb-file, :$cache-file);
+}
+
 method new(Str() $path --> Semantics::KnowBase:D) {
     state %cache;
-    my $abs = $path.IO.absolute;
-    return %cache{$abs} //= self.bless(builder => { new-knowbase $abs });
+    my $abs = $path.IO.absolute.IO;
+    return %cache{$abs} //= self.bless(
+        builder    => { new-knowbase $abs },
+        kb-file    => $abs,
+        cache-file => "KBCACHE/{ $abs.basename }.json".IO,
+    );
 }
 
 
@@ -133,35 +150,48 @@ method forall(Atom:D $a, Concept:D $c --> Concept:D) {
 method !individuals(Obj:D $arr --> Array) {
     my @is;
     get-array $arr, -> Obj $obj {
-        push @is, Individual.new: self, "Individual($obj)", $obj;
+        push @is, Individual.new: self, "Individual({ id(self, $obj) })", $obj;
     };
     return @is;
 }
 
 method satisfiable(Concept:D $c --> Bool:D) {
-    return so jcall &b_o, 'satisfiable', "($C)Z", self, $c;
+    return $!cache.get: {
+        so jcall &b_o, 'satisfiable', "($C)Z", self, $c
+    }, 'satisfiable', $c.key;
 }
 
 method query(Concept:D $c) {
     fail X::Semantics::Unsatisfiable.new($c) unless self.satisfiable($c);
-    my $obj = jcall &o_o, 'query', "($C)[$I", self, $c;
-    return self!individuals: $obj;
+
+    return $!cache.get-many: { self.nominal($_) }, *.id, {
+        my $obj = jcall &o_o, 'query', "($C)[$I", self, $c;
+        self!individuals: $obj;
+    }, 'query', $c.key;
 }
 
 method project(Individual:D $i, Atom:D $a) {
-    my $obj = jcall &o_oo, 'project', "($I$A)[$I", self, $i, $a;
-    return self!individuals: $obj;
+    return $!cache.get-many: { self.nominal($_) }, *.id, {
+        my $obj = jcall &o_oo, 'project', "($I$A)[$I", self, $i, $a;
+        self!individuals: $obj;
+    }, 'project', $i.key, $a.key;
 }
 
 
 method subtype(Concept:D $c, Concept:D $d --> Bool:D) {
-    return so jcall &b_oo, 'subtype', "($C$C)Z", self, $c, $d;
+    return $!cache.get: {
+        so jcall &b_oo, 'subtype', "($C$C)Z", self, $c, $d;
+    }, 'subtype', $c.key, $d.key;
 }
 
 method member(Concept:D $c, Individual:D $i --> Bool:D) {
-    return so jcall &b_oo, 'member', "($C$I)Z", self, $c, $i;
+    return $!cache.get: {
+        so jcall &b_oo, 'member', "($C$I)Z", self, $c, $i;
+    }, 'member', $c.key, $i.key;
 }
 
 method same(Individual:D $i, Individual:D $j --> Bool:D) {
-    return so jcall &b_oo, 'same', "($I$I)Z", self, $i, $j;
+    return $!cache.get: {
+        so jcall &b_oo, 'same', "($I$I)Z", self, $i, $j;
+    }, 'same', $i.key, $j.key;
 }

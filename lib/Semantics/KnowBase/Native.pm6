@@ -163,3 +163,18 @@ sub get-array($arr, &block) is export {
     java { j2a $arr, &block };
     return;
 }
+
+
+sub flock_path(Str, int32 --> int32) is native('semantics') { ... }
+sub    unflock(int32)                is native('semantics') { ... }
+
+sub flocked(Str() $path, &block, :$exclusive = False) is export {
+    my int32 $fd = flock_path($path, $exclusive ?? 1 !! 0);
+    return False if $fd == -1;
+
+    try block();
+
+    unflock($fd);
+    die $! if $!;
+    return True;
+}

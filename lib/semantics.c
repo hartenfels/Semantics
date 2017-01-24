@@ -5,6 +5,12 @@
 #include <errno.h>
 #include <jni.h>
 
+#include <sys/file.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 
 #define NOTHING
 
@@ -206,4 +212,30 @@ jobject o_o(D_ARGS, jobject obj, jobject arg1)
 jobject o_oo(D_ARGS, jobject obj, jobject arg1, jobject arg2)
 {
     return call_o(obj, name, sig, arg1);
+}
+
+
+int flock_path(const char *path, int exclusive)
+{
+    int fd;
+
+    if ((fd = open(path, O_RDONLY)) == -1) {
+        perror("Can't open data source file for locking");
+        return -1;
+    }
+
+    if (flock(fd, exclusive ? LOCK_EX : LOCK_SH)) {
+        perror("Can't flock data source file");
+        close(fd);
+        return -1;
+    }
+
+    return fd;
+}
+
+void unflock(int fd)
+{
+    if (close(fd) == -1) {
+        perror("Error closing data source file");
+    }
 }
