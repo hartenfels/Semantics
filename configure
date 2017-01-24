@@ -254,6 +254,7 @@ blib/KnowBase.class: lib/KnowBase.java vendor/HermiT.jar | blib
 test:
     @echo -n 'Precompiling... '
     export LD_LIBRARY_PATH="blib:%LIBPATH%:$$LD_LIBRARY_PATH"; %PERL6% -Ilib -c lib/Semantics.pm6 && prove -j 9 -e '%PERL6% -Ilib' -r t
+    sleep 1
 
 
 semantics: share/bin-template.p6
