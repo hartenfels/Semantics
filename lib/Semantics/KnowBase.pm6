@@ -1,6 +1,6 @@
 use Semantics::KnowBase::Native;
 use X::Semantics;
-unit class Semantics::KnowBase does Rooted;
+unit class Semantics::KnowBase is Rooted;
 
 
 constant $K = 'LKnowBase;';
@@ -10,16 +10,23 @@ constant $C = 'Lorg/semanticweb/owlapi/model/OWLClassExpression;';
 constant $A = 'Lorg/semanticweb/owlapi/model/OWLObjectPropertyExpression;';
 
 
-role Knowledgeable is Rooted {
-    has Semantics::KnowBase:D $.kb is required;
+class Knowledgeable is Rooted {
+    has Semantics::KnowBase:D $.kb  is required;
+    has Str:D                 $.key is required;
 
-    method new($kb, $obj) { self.bless(:$kb, :$obj) }
+    multi method new($kb, $key, Callable:D $builder) {
+        return self.bless(:$kb, :$key, :$builder);
+    }
+
+    multi method new($kb, $key, $obj) {
+        return self.bless(:$kb, :$key, :$obj);
+    }
 }
 
 
-class Individual does Knowledgeable {
+class Individual is Knowledgeable {
     method id(Individual:D: --> Str:D) {
-        return jcall(&o_o, 'id', "($I)$S", $!kb, self).as-str;
+        return jcall(&o_o, 'id', "($I)$S", $.kb, self).as-str;
     }
 
     method name(Individual:D: --> Str:D) {
@@ -32,18 +39,18 @@ class Individual does Knowledgeable {
     }
 
     method eqv(Individual:D: Individual:D $other --> Bool:D) {
-        return $!kb === $other.kb && $!kb.same(self, $other);
+        return $.kb === $other.kb && $.kb.same(self, $other);
     }
 }
 
 multi infix:<eqv>(Individual:D $i, Individual:D $j) is export { $i.eqv($j) }
 
 
-class Atom does Knowledgeable {}
+class Atom is Knowledgeable {}
 
 
-class Concept does Knowledgeable {
-    multi method ACCEPTS(Concept:D: Concept:D $c) { $!kb.subtype: self, $c }
+class Concept is Knowledgeable {
+    multi method ACCEPTS(Concept:D: Concept:D $c) { $.kb.subtype: self, $c }
     multi method ACCEPTS(|)                       { callsame               }
 }
 
@@ -51,74 +58,83 @@ class Concept does Knowledgeable {
 method new(Str() $path --> Semantics::KnowBase:D) {
     state %cache;
     my $abs = $path.IO.absolute;
-    return %cache{$abs} //= self.bless(:obj(new-knowbase $abs));
+    return %cache{$abs} //= self.bless(builder => { new-knowbase $abs });
 }
 
 
 multi method atom(Atom:D $a --> Atom:D) { $a }
 multi method atom(Str()  $s --> Atom:D) {
-    my $obj = jcall &o_o, 'atom', "($S)$A", self, $s;
-    return Atom.new: self, $obj;
+    return Atom.new: self, "Atom($s)", {
+        jcall &o_o, 'atom', "($S)$A", self, $s;
+    };
 }
 
 multi method concept(Concept:D $c --> Concept:D) { $c }
 multi method concept(Str()     $s --> Concept:D) {
-    my $obj = jcall &o_o, 'concept', "($S)$C", self, $s;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "Concept($s)", {
+        jcall &o_o, 'concept', "($S)$C", self, $s;
+    };
 }
 
 multi method nominal(Individual:D $i --> Individual:D) { $i }
 multi method nominal(Str()        $s --> Individual:D) {
-    my $obj = jcall &o_o, 'nominal', "($S)$I", self, $s;
-    return Individual.new: self, $obj;
+    return Individual.new: self, "Individual($s)", {
+        jcall &o_o, 'nominal', "($S)$I", self, $s;
+    };
 }
 
 
 method invert(Atom:D $a --> Atom:D) {
-    my $obj = jcall &o_o, 'invert', "($A)$A", self, $a;
-    return Atom.new: self, $obj;
+    return Atom.new: self, "⁻({ $a.key })", {
+        jcall &o_o, 'invert', "($A)$A", self, $a;
+    };
 }
 
 
 method everything(--> Concept:D) {
-    my $obj = jcall &o, 'everything', "()$C", self;
-    return Concept.new: self, $obj;
+    return Concept.new: self, '⊤', { jcall &o, 'everything', "()$C", self };
 }
 
 method nothing(--> Concept:D) {
-    my $obj = jcall &o, 'nothing', "()$C", self;
-    return Concept.new: self, $obj;
+    return Concept.new: self, '⊥', { jcall &o, 'nothing', "()$C", self };
 }
 
 method unify(@cs --> Concept:D) {
-    my $obj = jcall &o_o, 'unify', "([$C)$C", self, make-array $C, @cs;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "⊔({ @cs».key.join(',') })", {
+        jcall &o_o, 'unify', "([$C)$C", self, make-array $C, @cs;
+    };
 }
 
 method intersect(@cs --> Concept:D) {
-    my $obj = jcall &o_o, 'intersect', "([$C)$C", self, make-array $C, @cs;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "⊓({ @cs».key.join(',') })", {
+        jcall &o_o, 'intersect', "([$C)$C", self, make-array $C, @cs;
+    };
 }
 
 method negate(Concept:D $c --> Concept:D) {
-    my $obj = jcall &o_o, 'negate', "($C)$C", self, $c;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "¬({ $c.key })", {
+        jcall &o_o, 'negate', "($C)$C", self, $c;
+    };
 }
 
 method exists(Atom:D $a, Concept:D $c --> Concept:D) {
-    my $obj = jcall &o_oo, 'exists', "($A$C)$C", self, $a, $c;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "∃({ $a.key }.{ $c.key })", {
+        jcall &o_oo, 'exists', "($A$C)$C", self, $a, $c;
+    };
 }
 
 method forall(Atom:D $a, Concept:D $c --> Concept:D) {
-    my $obj = jcall &o_oo, 'forall', "($A$C)$C", self, $a, $c;
-    return Concept.new: self, $obj;
+    return Concept.new: self, "∀({ $a.key }.{ $c.key })", {
+        jcall &o_oo, 'forall', "($A$C)$C", self, $a, $c;
+    };
 }
 
 
 method !individuals(Obj:D $arr --> Array) {
     my @is;
-    get-array $arr, -> Obj $obj { push @is, Individual.new: self, $obj };
+    get-array $arr, -> Obj $obj {
+        push @is, Individual.new: self, "Individual($obj)", $obj;
+    };
     return @is;
 }
 

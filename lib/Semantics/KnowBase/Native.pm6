@@ -34,7 +34,35 @@ sub init-jvm() is export {
 sub root  (Obj --> Obj) is native('semantics') { ... }
 sub unroot(Obj)         is native('semantics') { ... }
 
-role Rooted is export {
+
+class Rooted is export {
+    has $!builder is required;
+    has $!obj;
+
+    submethod BUILD(:$!builder, :$!obj) {}
+
+    submethod DESTROY { unroot($!obj) if $!obj }
+
+    method obj(Rooted:D:) {
+        unless $!obj {
+            $!obj     = $!builder.();
+            $!builder = Nil;
+        }
+        return $!obj;
+    }
+
+    method evaluated(Rooted:D: --> Bool:D) { so $!obj }
+
+    method Str(Rooted:D:) { ~$.obj }
+
+    method gist() {
+        return "($!obj)" if self && $!obj;
+        nextsame;
+    }
+}
+
+
+class X::Java is export is Exception {
     has Obj:D $.obj is required;
 
     submethod BUILD(:$obj) { $!obj = root($obj) }
@@ -43,12 +71,6 @@ role Rooted is export {
 
     method Str(Rooted:D:) { ~$!obj }
 
-    multi method gist(Rooted:D:) { ~$!obj   }
-    multi method gist(Rooted:U:) { nextsame }
-}
-
-
-class X::Java is export is Exception does Rooted {
     method message(--> Str) {
         return jcall(&o, 'getMessage', '()Ljava/lang/String;', self).as-str;
     }
@@ -68,9 +90,10 @@ sub java(&block) {
 
 sub s2j(blob16, uint32 --> Obj) is native('semantics') { ... }
 
-multi sub to-obj(   Obj:D $_) {  $_  }
-multi sub to-obj(Rooted:D $_) { .obj }
-multi sub to-obj(   Str:D $_) {
+multi sub to-obj(    Obj:D $_) {  $_  }
+multi sub to-obj(X::Java:D $_) { .obj }
+multi sub to-obj( Rooted:D $_) { .obj }
+multi sub to-obj(    Str:D $_) {
     my $b = .encode('UTF-16');
     return java { s2j $b, $b.elems };
 }
