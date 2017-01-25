@@ -1,6 +1,6 @@
 unit class Semantics::KnowBase::Cache;
-use Semantics::JSON::Any;
 use Semantics::KnowBase::Native;
+use Semantics::KnowBase::Serialize;
 
 
 has IO::Path:D $!kb-file    is required;
@@ -11,9 +11,10 @@ has %!cache;
 my $need-stashing = SetHash.new;
 
 
-submethod BUILD(:$!kb-file, :$!cache-file) {
+submethod BUILD(:$!kb-file, :$cache-file) {
+    $!cache-file = "$cache-file.$extension".IO;
     if $!cache-file.e && $!kb-file.modified < $!cache-file.modified {
-        flocked $!kb-file, { %!cache = from-json(slurp $!cache-file) };
+        flocked $!kb-file, { %!cache = reconstitute(slurp $!cache-file) };
     }
 }
 
@@ -58,12 +59,12 @@ method stash() {
         my %old;
         try do {
             if $!kb-file.modified < $!cache-file.modified {
-                %old = from-json(slurp $!cache-file);
+                %old = reconstitute(slurp $!cache-file);
             }
         }
 
         my %combined = |%old, |%!cache;
-        $!cache-file.spurt: to-json(%combined);
+        $!cache-file.spurt: conserve(%combined);
     };
 }
 

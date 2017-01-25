@@ -74,7 +74,7 @@ method new(Str() $path --> Semantics::KnowBase:D) {
     return %cache{$abs} //= self.bless(
         builder    => { new-knowbase $abs },
         kb-file    => $abs,
-        cache-file => "KBCACHE/{ $abs.basename }.json".IO,
+        cache-file => "KBCACHE/{ $abs.basename }".IO,
     );
 }
 
