@@ -263,7 +263,7 @@ semantics: share/bin-template.p6
 
 
 clean:
-    rm -rf blib lib/.precomp semantics
+    rm -rf blib lib/.precomp semantics KBCACHE
 
 realclean: clean
     rm -rf Makefile
