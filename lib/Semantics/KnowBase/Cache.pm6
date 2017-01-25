@@ -55,9 +55,14 @@ method stash() {
     flocked $!kb-file, :exclusive, {
         $!cache-file.parent.mkdir;
 
-        try my %old  = from-json(slurp $!cache-file);
-        my %combined = |%old, |%!cache;
+        my %old;
+        try do {
+            if $!kb-file.modified < $!cache-file.modified {
+                %old = from-json(slurp $!cache-file);
+            }
+        }
 
+        my %combined = |%old, |%!cache;
         $!cache-file.spurt: to-json(%combined);
     };
 }
