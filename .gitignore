@@ -1,4 +1,5 @@
 blib
+KBCACHE
 lib/.precomp
 Makefile
 semantics
