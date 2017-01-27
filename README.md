@@ -1,6 +1,6 @@
 # NAME
 
-Semantics — embedded semantic queries and types
+Semantics — semantic data prototype for the [Software Languages Team](http://softlang.wikidot.com/) and [Institute for Web Science](https://west.uni-koblenz.de/lambda-dl) of the [University of Koblenz-Landau](https://www.uni-koblenz-landau.de/en/university-of-koblenz-landau)
 
 
 # SYNOPSIS
