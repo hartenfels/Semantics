@@ -23,6 +23,7 @@ class KnowBase {
         df     = mgr.getOWLDataFactory();
         onto   = mgr.loadOntologyFromOntologyDocument(new File(path));
         hermit = new Reasoner(onto);
+        hermit.precomputeInferences();
     }
 
 
