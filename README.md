@@ -222,7 +222,6 @@ As with [queries](#query), only the individuals have a type, the sequence
 itself does not.
 
 
-
 # LICENSE
 
 [Apache License, Version 2](LICENSE)
