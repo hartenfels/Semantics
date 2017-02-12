@@ -29,7 +29,7 @@ for query <:MusicArtist> -> $artist {
 ```
 
 
-# REQUIREMENTS
+# INSTALLATION
 
 If you have [Docker](https://www.docker.com/), you can just run the
 [container-semantics](container-semantics) script. It will pull the container
