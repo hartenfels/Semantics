@@ -31,32 +31,33 @@ for query <:MusicArtist> -> $artist {
 
 # REQUIREMENTS
 
+If you have [Docker](https://www.docker.com/), you can just run the
+[container-semantics](container-semantics) script. It will pull the container
+for you automatically, you don't need to install anything else.
+
+For example:
+
+```sh
+./container-semantics examples/recommend.p6
+```
+
+If you don't want to use Docker, you need the following:
+
 * Perl 6 - <http://rakudo.org/>
 
 * Java JDK 8, shouldn't matter if it's Oracle or OpenJDK
 
 * A Unix-like environment (C compiler, sh, make, perl)
 
+To build it, first run `./configure` (which isn't autoconf). It should figure
+out where all your JNI headers and libraries are. If it can't, follow the
+instructions it gives to help it.
 
-# BUILDING
-
-First run `./configure` (which isn't autoconf). It should figure out where all
-your JNI headers and libraries are. If it can't, follow the instructions it
-gives to help it.
-
-Then run `make` to build the Java and C libraries and run the tests.
-
-
-# RUNNING
-
-It is necessary to set up your environment's `LD_LIBRARY_PATH` and to include
-[lib](lib) in Perl 6's library path. Since that's annoying to do manually,
-`make` will generate a script called `semantics` that does this for you.
-
-Simply run your Perl 6 scripts that `use Semantics` via:
+Then run `make` to build the Java and C libraries and run the tests and use the
+`semantics` script that has been created for you:
 
 ```sh
-./semantics yourprogram.p6
+./semantics examples/recommend.p6
 ```
 
 
