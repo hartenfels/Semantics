@@ -6,7 +6,7 @@ use POSIX qw(strftime);
 use Term::ANSIColor;
 
 $ENV{HERMIT_URL}
-    ||= 'http://www.hermit-reasoner.com/download/current/HermiT.zip';
+    ||= 'https://www.cs.ox.ac.uk/isg/tools/HermiT/download/current/HermiT.zip';
 
 
 sub strip {
