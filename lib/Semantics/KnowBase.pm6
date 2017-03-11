@@ -38,7 +38,7 @@ class Individual is Knowledgeable {
 
     method name(Individual:D: --> Str:D) {
         given self.id {
-            return ~$0 when /^':'        (.*)    $/;
+            return ~$0 when /^.*? ':'    (.*)    $/;
             return ~$0 when /^'<' .* '#' (.*) '>'$/;
             return ~$0 when /^'<'        (.*) '>'$/;
             return $_;
