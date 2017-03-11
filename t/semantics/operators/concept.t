@@ -2,32 +2,29 @@ use v6;
 use Test;
 use Semantics <share/music.rdf>;
 
-constant $U   = 'ObjectUnionOf';
-constant $I   = 'ObjectIntersectionOf';
-constant $N   = 'ObjectComplementOf';
-constant $URL = 'http://example.org/music';
+constant $M = '["C",":MusicArtist"]';
+constant $R = '["C",":RadioStation"]';
+constant $S = '["C",":Song"]';
 
 
-is T, 'owl:Thing',   'T is ⊤';
-is F, 'owl:Nothing', 'F is ⊥';
+is T, 'true',  'T is ⊤';
+is F, 'false', 'F is ⊥';
 
 
-is <:MusicArtist> ⊔ <:Song>, "$U\(<$URL#MusicArtist> <$URL#Song>)", '⊔';
-is <:MusicArtist> ⊓ <:Song>, "$I\(<$URL#MusicArtist> <$URL#Song>)", '⊓';
-is ¬<:MusicArtist>,          "$N\(<$URL#MusicArtist>)",             '¬';
+is <:MusicArtist> ⊔ <:Song>, qq/["U",[$M,$S]]/, '⊔';
+is <:MusicArtist> ⊓ <:Song>, qq/["I",[$M,$S]]/, '⊓';
+is ¬<:MusicArtist>,          qq/["N",$M]/,      '¬';
 
 
 is <:MusicArtist> ⊔ ¬<:Song> ⊓ <:RadioStation>,
-   "$U\(<$URL#MusicArtist> $I\(<$URL#RadioStation> $N\(<$URL#Song>)))",
+   qq/["U",[$M,["I",[["N",$S],$R]]]]/,
    'precedence of ⊔, ⊓ and ¬';
 
 
-is <:MusicArtist> ⊔ <:Song> ⊔ <:RadioStation>,
-   "$U\(<$URL#MusicArtist> <$URL#RadioStation> <$URL#Song>)",
+is <:MusicArtist> ⊔ <:Song> ⊔ <:RadioStation>, qq/["U",[$M,$S,$R]]/,
    'list association of ⊔';
 
-is <:MusicArtist> ⊓ <:Song> ⊓ <:RadioStation>,
-   "$I\(<$URL#MusicArtist> <$URL#RadioStation> <$URL#Song>)",
+is <:MusicArtist> ⊓ <:Song> ⊓ <:RadioStation>, qq/["I",[$M,$S,$R]]/,
    'list association of ⊓';
 
 

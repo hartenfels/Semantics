@@ -234,4 +234,6 @@ itself does not.
 
 * [LambdaDL](https://github.com/hartenfels/LambdaDL)
 
+* [Semserv](https://github.com/hartenfels/Semserv)
+
 * [HermiT](http://www.hermit-reasoner.com/)

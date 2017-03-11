@@ -2,13 +2,12 @@ use v6;
 use Test;
 use Semantics <share/music.rdf>;
 
-my $A   = 'ObjectAllValuesFrom';
-my $E   = 'ObjectSomeValuesFrom';
-my $URL = 'http://example.org/music';
+constant $I = '["r",":influencedBy"]';
+constant $S = '["C",":Song"]';
 
 
-is ∃<:influencedBy> => T,       "$E\(<$URL#influencedBy> owl:Thing)",   '∃';
-is ∀<:influencedBy> => <:Song>, "$A\(<$URL#influencedBy> <$URL#Song>)", '∀';
+is ∃<:influencedBy> => T,       qq/["E",$I,true]/, '∃';
+is ∀<:influencedBy> => <:Song>, qq/["A",$I,$S]/,   '∀';
 
 
 done-testing;
