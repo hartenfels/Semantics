@@ -57,8 +57,8 @@ method new(Str() $path --> Semantics::KnowBase:D) {
 method !msg($op, $args) {
     $!socket.print(to-json([$!path, $op, $args], :!pretty) ~ "\n");
     my $res = from-json($!socket.get);
-    die X::Semantics::Server.new($res<error>) if $res ~~ Hash;
-    return $res;
+    die X::Semantics::Server.new(to-json($res)) if $res ~~ Hash;
+    return $res
 }
 
 
