@@ -65,8 +65,9 @@ method !msg($op, $args) {
 multi method atom(Atom:D $a --> Atom:D) { $a }
 multi method atom(Str()  $s --> Atom:D) { Atom.new: self, ['r', $s] }
 
-multi method concept(Concept:D $c --> Concept:D) { $c }
-multi method concept(Str()     $s --> Concept:D) { Concept.new: self, ['C', $s] }
+multi method concept(Concept:D  $c --> Concept:D) { $c }
+multi method concept(Callable:D $b --> Concept:D) { Concept.new: self, ['O', $b()] }
+multi method concept(Str()      $s --> Concept:D) { Concept.new: self, ['C', $s  ] }
 
 multi method nominal(Individual:D $i --> Individual:D) { $i }
 multi method nominal(Str()        $s --> Individual:D) {
