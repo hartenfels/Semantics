@@ -18,8 +18,8 @@ is I<xs:string>, '<xs:string>', "XML data types aren't special";
 ok I<:hendriks>:exists, 'IRIs always exist';
 
 
-dies-ok { I<:hendriks>  = ':hendriks' }, "can't assign to nominals";
-dies-ok { I<:hendriks> := ':hendriks' }, "can't bind to nominals";
+dies-ok { I<:hendriks>  = ':hendriks' }, "can't assign to individuals";
+dies-ok { I<:hendriks> := ':hendriks' }, "can't bind to individuals";
 
 
 done-testing;

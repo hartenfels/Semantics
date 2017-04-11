@@ -69,9 +69,9 @@ multi method concept(Concept:D  $c --> Concept:D) { $c }
 multi method concept(Callable:D $b --> Concept:D) { Concept.new: self, ['O', $b()] }
 multi method concept(Str()      $s --> Concept:D) { Concept.new: self, ['C', $s  ] }
 
-multi method nominal(Individual:D $i --> Individual:D) { $i }
-multi method nominal(Str()        $s --> Individual:D) {
-    return Individual.new: self, self!msg: 'nominal', $s;
+multi method individual(Individual:D $i --> Individual:D) { $i }
+multi method individual(Str()        $s --> Individual:D) {
+    return Individual.new: self, self!msg: 'individual', $s;
 }
 
 

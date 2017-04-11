@@ -1,4 +1,4 @@
-unit class Semantics::Nominals;
+unit class Semantics::Individuals;
 use Semantics::KnowBase;
 
 
@@ -8,15 +8,15 @@ submethod BUILD(:$!kb) {}
 
 
 method AT-KEY(Str() $iri --> Semantics::KnowBase::Individual) {
-    return $!kb.nominal($iri);
+    return $!kb.individual($iri);
 }
 
 method EXISTS-KEY(Str() $iri --> True) {}
 
 method ASSIGN-KEY($) {
-    die "can't assign to nominals";
+    die "can't assign to individuals";
 }
 
 method BIND-KEY($) {
-    die "can't bind to nominals";
+    die "can't bind to individuals";
 }

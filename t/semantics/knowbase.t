@@ -9,7 +9,7 @@ my $zombie;
 lives-ok { $zombie = Semantics::KnowBase.new('nonexistent.rdf') },
          "kb with nonexistent data source is too lazy to die right away";
 
-throws-like { $zombie.nominal('') }, X::Semantics::Server,
+throws-like { $zombie.individual('') }, X::Semantics::Server,
             'lazy kb dies when evaluated', message => /FileNotFound/;
 
 

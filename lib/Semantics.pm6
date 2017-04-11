@@ -1,16 +1,16 @@
 use Semantics::KnowBase;
-use Semantics::Nominals;
+use Semantics::Individuals;
 
 
 sub EXPORT(Str() $kb-path) {
     my Semantics::KnowBase $kb .= new($kb-path);
 
-    sub atom   ($a) { $kb.atom:    $a }
-    sub concept($c) { $kb.concept: $c }
-    sub nominal($i) { $kb.nominal: $i }
+    sub atom      ($a) { $kb.atom:       $a }
+    sub concept   ($c) { $kb.concept:    $c }
+    sub individual($i) { $kb.individual: $i }
 
     sub project($i, $a) is looser(&infix:<+>) is assoc<none> {
-        return $kb.project: $kb.nominal($i), $kb.atom($a);
+        return $kb.project: $kb.individual($i), $kb.atom($a);
     }
 
     sub unify(*@cs) is equiv(&infix:<+>) is assoc<list> {
@@ -34,11 +34,11 @@ sub EXPORT(Str() $kb-path) {
     }
 
     sub member($i, $c) is looser(&infix:«=>») {
-        return $kb.member: $kb.concept($c), $kb.nominal($i);
+        return $kb.member: $kb.concept($c), $kb.individual($i);
     }
 
     sub superset($c, $i) is looser(&infix:«=>») {
-        return $kb.member: $kb.nominal($i), $kb.concept($c);
+        return $kb.member: $kb.individual($i), $kb.concept($c);
     }
 
     sub query($c) {
@@ -50,12 +50,12 @@ sub EXPORT(Str() $kb-path) {
     }
 
     return {
-        'I'            => Semantics::Nominals.new(:$kb),
+        'I'            => Semantics::Individuals.new(:$kb),
         'T'            => $kb.everything,
         'F'            => $kb.nothing,
         '&concept'     => &concept,
         '&atom'        => &atom,
-        '&nominal'     => &nominal,
+        '&individual'  => &individual,
         '&query'       => &query,
         '&infix:<→>'   => &project,
         '&infix:<⊔>'   => &unify,
