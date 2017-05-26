@@ -6,7 +6,7 @@ Semantics — semantic data prototype for the [Software Languages Team](http://s
 # SYNOPSIS
 
 ```perl6
-use Semantics <share/music.rdf>;
+use Semantics <music.rdf>;
 
 subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
 subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
@@ -72,7 +72,7 @@ queries, with a little C to make it callable via
 To use this library, just `use` it with a path to a knowledge base file:
 
 ```perl6
-use Semantics <share/music.rdf>;
+use Semantics <music.rdf>;
 ```
 
 This will export all the necessary operators and subroutines for the given

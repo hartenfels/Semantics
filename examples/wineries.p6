@@ -1,4 +1,4 @@
-use Semantics <share/wine.rdf>;
+use Semantics <wine.rdf>;
 
 subset Wine of Individual where * ⊑ <:Wine>;
 

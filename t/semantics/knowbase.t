@@ -13,7 +13,7 @@ throws-like { $zombie.individual('') }, X::Semantics::Server,
             'lazy kb dies when evaluated', message => /FileNotFound/;
 
 
-isa-ok Semantics::KnowBase.new('share/music.rdf'),
+isa-ok Semantics::KnowBase.new('music.rdf'),
        Semantics::KnowBase, 'proper data source';
 
 

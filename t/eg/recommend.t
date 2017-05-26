@@ -1,6 +1,6 @@
 use v6;
 use Test;
-use Semantics <share/wine.rdf>;
+use Semantics <wine.rdf>;
 
 subset Wine   of Individual where * ⊑ <:Wine>;
 subset Winery of Individual where * ⊑ <:Winery>;

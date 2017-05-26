@@ -1,4 +1,4 @@
-use Semantics <share/music.rdf>;
+use Semantics <music.rdf>;
 
 
 subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;

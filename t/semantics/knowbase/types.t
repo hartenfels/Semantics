@@ -1,6 +1,6 @@
 use v6;
 use Test;
-use Semantics <share/music.rdf>;
+use Semantics <music.rdf>;
 
 
 ok concept(<:MusicArtist>) ~~ concept(<:MusicArtist>),
