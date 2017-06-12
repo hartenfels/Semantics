@@ -1,6 +1,3 @@
 .git
-blib
 lib/.precomp
-KBCACHE
-Makefile
 semantics
