@@ -6,7 +6,7 @@ constant $I = '["r",":influencedBy"]';
 constant $S = '["C",":Song"]';
 
 
-is ∃<:influencedBy> => T,       qq/["E",$I,true]/, '∃';
+is ∃<:influencedBy> => ⊤,       qq/["E",$I,true]/, '∃';
 is ∀<:influencedBy> => <:Song>, qq/["A",$I,$S]/,   '∀';
 
 

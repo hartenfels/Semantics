@@ -5,6 +5,9 @@ use Semantics::Individuals;
 sub EXPORT(Str() $kb-path) {
     my Semantics::KnowBase $kb .= new($kb-path);
 
+    sub everything() { $kb.everything }
+    sub nothing   () { $kb.nothing    }
+
     sub atom      ($a) { $kb.atom:       $a }
     sub concept   ($c) { $kb.concept:    $c }
     sub individual($i) { $kb.individual: $i }
@@ -51,8 +54,8 @@ sub EXPORT(Str() $kb-path) {
 
     return {
         'I'            => Semantics::Individuals.new(:$kb),
-        'T'            => $kb.everything,
-        'F'            => $kb.nothing,
+        '&term:<⊤>'    => &everything,
+        '&term:<⊥>'    => &nothing,
         '&concept'     => &concept,
         '&atom'        => &atom,
         '&individual'  => &individual,

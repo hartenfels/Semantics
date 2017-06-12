@@ -18,10 +18,10 @@ subtest {
 }, 'query for artists that recorded a song';
 
 
-throws-like { query F }, X::Semantics::Unsatisfiable,
+throws-like { query ⊥ }, X::Semantics::Unsatisfiable,
             'unsatisfiable query fails';
 
-cmp-ok query(F), '~~', Failure, 'failure can be detected';
+cmp-ok query(⊥), '~~', Failure, 'failure can be detected';
 
 
 done-testing;

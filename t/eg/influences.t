@@ -4,7 +4,7 @@ use Semantics <music.rdf>;
 
 
 subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
-subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
+subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => ⊤;
 
 
 sub get-influences(MusicArtist $artist) {

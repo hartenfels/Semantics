@@ -6,15 +6,15 @@ use Semantics <music.rdf>;
 ok concept(<:MusicArtist>) ~~ concept(<:MusicArtist>),
    'same concept is subtype of itself';
 
-nok concept(<:MusicArtist>) ~~ (∃<:influencedBy> => T),
+nok concept(<:MusicArtist>) ~~ (∃<:influencedBy> => ⊤),
     'not all music artists have influences';
 
 
-is-deeply set(map * ⊑ ∃<:influencedBy> => T, query <:MusicArtist>),
+is-deeply set(map * ⊑ ∃<:influencedBy> => ⊤, query <:MusicArtist>),
           set(True, False), 'only some music artists have influences';
 
 
-sub get-influences($x where { $_ ⊑ ∃<:influencedBy> => T }) {
+sub get-influences($x where { $_ ⊑ ∃<:influencedBy> => ⊤ }) {
     return $x → <:influencedBy>;
 }
 
@@ -25,10 +25,10 @@ dies-ok  { get-influences  <:beatles> }, 'dies with beatles string';
 dies-ok  { get-influences I<:beatles> }, 'dies with beatles individual';
 
 
-ok query(∃<:influencedBy> => T).all ⊑ ∃<:influencedBy> => T,
+ok query(∃<:influencedBy> => ⊤).all ⊑ ∃<:influencedBy> => ⊤,
    'correct query result for all elements';
 
-nok query(<:MusicArtist>).all ⊑ ∃<:influencedBy> => T,
+nok query(<:MusicArtist>).all ⊑ ∃<:influencedBy> => ⊤,
     'incorrect query result for all elements';
 
 

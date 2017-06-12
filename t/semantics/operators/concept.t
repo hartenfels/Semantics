@@ -7,8 +7,8 @@ constant $R = '["C",":RadioStation"]';
 constant $S = '["C",":Song"]';
 
 
-is T, 'true',  'T is ⊤';
-is F, 'false', 'F is ⊥';
+is ⊤, 'true',  '⊤ is ⊤';
+is ⊥, 'false', '⊥ is ⊥';
 
 
 is <:MusicArtist> ⊔ <:Song>, qq/["U",[$M,$S]]/, '⊔';

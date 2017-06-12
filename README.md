@@ -9,7 +9,7 @@ Semantics — semantic data prototype for the [Software Languages Team](http://s
 use Semantics <music.rdf>;
 
 subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
-subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
+subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => ⊤;
 
 sub get-influences(MusicArtist $artist) {
     given $artist {
@@ -93,10 +93,10 @@ Lets you retrieve nominal semantic objects via associative subscript.  For
 example, `I<:hendrix>` will give you an individual for the IRI `:hendrix`.
 
 
-### `T` and `F`
+### `⊤` and `⊥`
 
-Stand for ⊤ and ⊥, everything and nothing. These are just constants that return
-the appropriate object.
+Stand for everything and nothing. These are just terms that return the
+appropriate object.
 
 
 ### `Concept`, `Atom`, `Individual`
@@ -168,7 +168,7 @@ sub prefix:<∀>((Atom:D|Str:D :key, Concept:D|Str:D :value) --> Concept:D)
 
 Apply existential or universal quantification.
 
-You use these operators with a pair, for example `∃<:influencedBy> => T`.
+You use these operators with a pair, for example `∃<:influencedBy> => ⊤`.
 
 
 ### Type Membership
@@ -185,7 +185,7 @@ You can use these to build subset types for use as type constraints:
 
 ```perl6
 subset MusicArtist   of Individual  where * ⊑ <:MusicArtist>;
-subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => T;
+subset Influenceable of MusicArtist where * ⊑ ∃<:influencedBy> => ⊤;
 ```
 
 
