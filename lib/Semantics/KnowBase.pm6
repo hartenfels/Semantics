@@ -46,7 +46,7 @@ has $!path;
 has $!socket;
 
 submethod BUILD(:$!path, :$host = 'localhost', :$port = 53115) {
-    $!socket = IO::Socket::INET.new(:$host, :$port, :nl-in("\n"));
+    $!socket = IO::Socket::INET.new(:$host, :$port);
 }
 
 method new(Str() $path --> Semantics::KnowBase:D) {
