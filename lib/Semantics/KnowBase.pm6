@@ -16,9 +16,7 @@ class Knowledgeable {
 class Individual is Knowledgeable {
     method name(Individual:D: --> Str:D) {
         given self.obj {
-            return ~$0 when /^.*? ':'    (.*)    $/;
-            return ~$0 when /^'<' .* '#' (.*) '>'$/;
-            return ~$0 when /^'<'        (.*) '>'$/;
+            return ~$0 when /^ .*? '#' (.*) $/;
             return $_;
         }
     }
